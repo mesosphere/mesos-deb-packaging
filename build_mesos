@@ -221,7 +221,7 @@ function fpm_ {
                -n "$name"
                -v "$version"
                --description
-"Cluster resouce manager with efficient resource isolation
+"Cluster resource manager with efficient resource isolation
 Apache Mesos is a cluster manager that offers efficient resource isolation
 and sharing across distributed applications, or frameworks. It can run
 Hadoop, MPI, Hypertable, Spark (a new framework for low-latency interactive
