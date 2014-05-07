@@ -129,7 +129,7 @@ function display_version {
 
 function create_installation {(
   local pwd="$(pwd -P)"
-  mkdir -p toor
+  sudo rm -rf toor && mkdir -p toor
   ( cd build && make install DESTDIR="$pwd"/toor )
   cd toor
   mkdir -p usr/share/doc/mesos etc/default etc/mesos var/log/mesos
@@ -138,7 +138,7 @@ function create_installation {(
   echo zk://localhost:2181/mesos > etc/mesos/zk
   init_scripts "$linux"
   jars
-  chown -R 0:0 .
+  sudo chown -R 0:0 .
 )}
 
 function init_scripts {
@@ -163,7 +163,7 @@ function init_scripts {
 
 function jars {
   mkdir -p usr/share/java/
-  mv ../build/src/mesos-*.jar usr/share/java/
+  mv ../build/src/java/target/mesos-*.jar usr/share/java/
 }
 
 function pkg {
