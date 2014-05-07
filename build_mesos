@@ -129,7 +129,7 @@ function display_version {
 
 function create_installation {(
   local pwd="$(pwd -P)"
-  mkdir -p toor
+  sudo rm -rf toor && mkdir -p toor
   ( cd build && make install DESTDIR="$pwd"/toor )
   cd toor
   mkdir -p usr/share/doc/mesos etc/default etc/mesos var/log/mesos
