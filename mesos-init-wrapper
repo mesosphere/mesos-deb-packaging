@@ -54,6 +54,9 @@ USAGE
 }; function --help { -h ;}                 # A nice way to handle -h and --help
 export LC_ALL=en_US.UTF-8                    # A locale that works consistently
 
+# ignore pkgmanager artifacts 
+EXCLUDE_REGEX="(.*dpkg-.*|.*rpmsave|.*\/~.*|.*\.in.*)"
+
 function main {
   err "Please use \`master' or \`slave'."
 }
@@ -72,7 +75,7 @@ function slave {
   [[ ! ${ISOLATION:-} ]] || args+=( --isolation="$ISOLATION" )
   for f in "$etc_slave"/* # attributes ip resources isolation &al.
   do
-    if [[ -f $f ]]
+    if [[ -f $f ]] &&  [[ ! $f =~ $EXCLUDE_REGEX ]]
     then
       local name="$(basename "$f")"
       if [[ $name == '?'* ]]         # Recognize flags (options without values)
@@ -115,7 +118,7 @@ function master {
   [[ ! ${LOGS:-} ]]    || args+=( --log_dir="$LOGS" )
   for f in "$etc_master"/* # cluster log_dir port &al.
   do
-    if [[ -f $f ]]
+    if [[ -f $f ]] &&  [[ ! $f =~ $EXCLUDE_REGEX ]]
     then
       local name="$(basename "$f")"
       if [[ $name == '?'* ]]         # Recognize flags (options without values)
