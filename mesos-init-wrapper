@@ -141,6 +141,7 @@ function logged {
       >(sed -n "/^W$pattern/ s/// p" | logger -p user.warn -t "$tag" ) \
       >(sed -n "/^E$pattern/ s/// p" | logger -p user.err  -t "$tag" ) \
       >(sed -n "/^F$pattern/ s/// p" | logger -p user.crit -t "$tag" ) \
+      >(grep -v "^[IWEF]$pattern"    | logger -p user.crit -t "$tag" ) \
       > /dev/null
   )
   exec 2>&1
