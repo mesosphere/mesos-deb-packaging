@@ -315,7 +315,9 @@ function deb_ {
                -d 'java-runtime-headless'
                -d libcurl3
                -d libsvn1
-               -d libsasl2-modules
+               -d libsasl2-modules               
+               -d libcurl4-nss-dev
+               -d 'libstdc++6 > 5.1'
                --after-install "$this/$asset_dir/mesos.postinst"
                --after-remove "$this/$asset_dir/mesos.postrm" )
   rm -f "$this"/pkg.deb
