@@ -352,12 +352,12 @@ Apache Mesos is a cluster manager that offers efficient resource isolation
 and sharing across distributed applications, or frameworks. It can run
 Hadoop, MPI, Hypertable, Spark (a new framework for low-latency interactive
 and iterative jobs), and other applications."
-               --url=http://incubator.apache.org/mesos/
+               --url=https://mesos.apache.org/
                --license Apache-2.0
                -a "$arch"
                --category misc
                --vendor ""
-               -m mesos-dev@incubator.apache.org
+               -m dev@mesos.apache.org
                --config-files etc/
                --prefix=/ )
   ( cd toor && "$gem_bin"/fpm "${opts[@]}" "$@" -- . )
