@@ -65,8 +65,10 @@ function slave {
   local resources=()
   # Call mesosphere-dnsconfig if present on the system to generate config files.
   [ -x /usr/bin/mesosphere-dnsconfig ] && mesosphere-dnsconfig -write -service=mesos-slave
+  set -o allexport
   [[ ! -f /etc/default/mesos ]]       || . /etc/default/mesos
   [[ ! -f /etc/default/mesos-slave ]] || . /etc/default/mesos-slave
+  set +o allexport
   [[ ! ${ULIMIT:-} ]]    || ulimit $ULIMIT
   [[ ! ${MASTER:-} ]]    || args+=( --master="$MASTER" )
   [[ ! ${IP:-} ]]        || args+=( --ip="$IP" )
@@ -109,8 +111,10 @@ function master {
   local args=()
   # Call mesosphere-dnsconfig if present on the system to generate config files.
   [ -x /usr/bin/mesosphere-dnsconfig ] && mesosphere-dnsconfig -write -service=mesos-master
+  set -o allexport
   [[ ! -f /etc/default/mesos ]]        || . /etc/default/mesos
   [[ ! -f /etc/default/mesos-master ]] || . /etc/default/mesos-master
+  set +o allexport
   [[ ! ${ULIMIT:-} ]]  || ulimit $ULIMIT
   [[ ! ${ZK:-} ]]      || args+=( --zk="$ZK" )
   [[ ! ${IP:-} ]]      || args+=( --ip="$IP" )
