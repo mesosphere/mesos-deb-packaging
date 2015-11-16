@@ -4,3 +4,4 @@ dist.tgz
 *.rpm
 *.egg
 mesos-repo
+.vagrant
