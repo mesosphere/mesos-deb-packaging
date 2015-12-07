@@ -259,7 +259,7 @@ function init_scripts {
       mkdir -p etc/init.d
       cp -p "$this"/init/master.init etc/init.d/mesos-master
       cp -p "$this"/init/slave.init etc/init.d/mesos-slave ;;
-    ubuntu/*|redhat/6|redhat/6.*|centos/6|centos/6.*)
+    ubuntu/*|redhat/6|redhat/6.*|centos/6|centos/6.*|amzn/*)
       mkdir -p etc/init
       cp "$this"/upstart/master.upstart etc/init/mesos-master.conf
       cp "$this"/upstart/slave.upstart etc/init/mesos-slave.conf ;;
@@ -290,7 +290,7 @@ function jars {
 function pkg {
   case "$linux" in
     ubuntu/*|debian/*) deb_ ;;
-    centos/*|redhat/*|fedora/*) rpm_ ;;
+    centos/*|redhat/*|fedora/*|amzn/*) rpm_ ;;
     *)                 err "Not sure how to package for: $linux" ;;
   esac
 }
@@ -298,7 +298,7 @@ function pkg {
 function architecture {
   case "$linux" in
     ubuntu/*|debian/*) dpkg-architecture -qDEB_BUILD_ARCH ;;
-    centos/*|redhat/*|fedora/*) arch ;;
+    centos/*|redhat/*|fedora/*|amzn/*) arch ;;
     *)                 err "Not sure how to determine arch for: $linux" ;;
   esac
 }
