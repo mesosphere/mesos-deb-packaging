@@ -2,7 +2,7 @@
 set -o errexit -o nounset -o pipefail
 function -h {
 cat <<USAGE
- USAGE: mesos-init-wrapper (master|slave)
+ USAGE: mesos-init-wrapper (master|slave) [additional arguments]
 
   Run Mesos in master or slave mode, loading environment files, setting up
   logging and loading config parameters as appropriate.
@@ -112,9 +112,9 @@ function slave {
         clean_args+=( "${i}" )
       fi
     done
-    /usr/sbin/mesos-slave "${clean_args[@]}"
+    /usr/sbin/mesos-slave "${clean_args[@]}" "$@"
   else
-    logged /usr/sbin/mesos-slave "${args[@]:-}"
+    logged /usr/sbin/mesos-slave "${args[@]:-}" "$@"
   fi
 }
 
@@ -153,9 +153,9 @@ function master {
         clean_args+=( "${i}" )
       fi
     done
-    /usr/sbin/mesos-master "${clean_args[@]}"
+    /usr/sbin/mesos-master "${clean_args[@]}" "$@"
   else
-    logged /usr/sbin/mesos-master "${args[@]:-}"
+    logged /usr/sbin/mesos-master "${args[@]:-}" "$@"
   fi
 }
 
