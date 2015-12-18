@@ -219,6 +219,7 @@ function create_installation {(
   mkdir -p etc/mesos-master etc/mesos-slave var/lib/mesos
   cp ../CHANGELOG                usr/share/doc/mesos/
   cp "$this"/default/mesos*      etc/default/
+  chmod 644 "etc/default/$this"
   echo zk://localhost:2181/mesos > etc/mesos/zk
   if [[ $(vercomp "$version" 0.19.0) == '>' ]] ||
      [[ $(vercomp "$version" 0.19.0) == '=' ]]
@@ -246,6 +247,7 @@ function create_lib_symlinks {(
 function init_scripts {
   mkdir -p usr/bin
   cp -p "$this"/mesos-init-wrapper usr/bin
+  chmod 755 usr/bin/mesos-init-wrapper
   case "$1" in
     fedora/*|redhat/7|redhat/7.*|centos/7|centos/7.*)
       mkdir -p usr/lib/systemd/system
@@ -258,11 +260,15 @@ function init_scripts {
     debian/*)
       mkdir -p etc/init.d
       cp -p "$this"/init/master.init etc/init.d/mesos-master
-      cp -p "$this"/init/slave.init etc/init.d/mesos-slave ;;
+      cp -p "$this"/init/slave.init etc/init.d/mesos-slave
+      chmod 755 etc/init.d/mesos-master etc/init.d/mesos-slave
+      ;;
     ubuntu/*|redhat/6|redhat/6.*|centos/6|centos/6.*)
       mkdir -p etc/init
       cp "$this"/upstart/master.upstart etc/init/mesos-master.conf
-      cp "$this"/upstart/slave.upstart etc/init/mesos-slave.conf ;;
+      cp "$this"/upstart/slave.upstart etc/init/mesos-slave.conf
+      chmod 644 etc/init/mesos-master.conf etc/init/mesos-slave.conf
+      ;;
     *) err "Not sure how to make init scripts for: $1" ;;
   esac
 }
