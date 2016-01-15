@@ -53,6 +53,7 @@ function globals {
   use_git_version=false
   prebuilt=false
   extra_libs=''
+  threads=2
 }; globals
 
 function as_absolute {
@@ -75,6 +76,7 @@ function main {
       --nominal-version)        version="$2"       ; shift 2 ;;
       --build-version)          build_version="$2" ; shift 2 ;;
       --extra-libs)             extra_libs="$2"    ; shift 2 ;;
+      --threads)                threads="$2"       ; shift 2 ;;
       *)                        err 'Argument error. Please see help.' ;;
     esac
   done
@@ -160,7 +162,7 @@ function build {(
   mkdir -p "$build_dir"
   cd "$build_dir"
   "$src_dir"/configure $(configure_opts)
-  make
+  make -j $threads
 )}
 
 function os_release {
