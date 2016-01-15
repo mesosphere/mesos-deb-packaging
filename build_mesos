@@ -53,7 +53,7 @@ function globals {
   use_git_version=false
   prebuilt=false
   extra_libs=''
-	threads=2
+  threads=2
 }; globals
 
 function as_absolute {
