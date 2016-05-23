@@ -55,7 +55,7 @@ function globals {
   use_git_version=false
   prebuilt=false
   extra_libs=''
-  enable_ssl=false
+  enable_ssl=true
 }; globals
 
 function as_absolute {
