@@ -335,6 +335,7 @@ function deb_ {
                --deb-recommends zookeeper-bin
                -d 'java-runtime-headless | java2-runtime-headless | default-jre'
                -d libcurl3
+               -d libcurl3-nss
                -d libsvn1
                -d libsasl2-modules
                --after-install "$this/$asset_dir/mesos.postinst"
