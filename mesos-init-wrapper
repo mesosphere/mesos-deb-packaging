@@ -54,8 +54,30 @@ USAGE
 }; function --help { -h ;}                 # A nice way to handle -h and --help
 export LC_ALL=en_US.UTF-8                    # A locale that works consistently
 
+# ignore pkgmanager artifacts 
+EXCLUDE_REGEX="(.*dpkg-.*|.*rpmsave|.*\/~.*|.*\.in.*)"
+
 function main {
   err "Please use \`master' or \`slave'."
+}
+
+ 
+function already_declared ()  {
+  local element=${1}
+  if containsElement $element
+  then
+  echo "$element is already declared "
+    return 1
+  else 
+  echo "$element is not declared "
+    return 1 
+  fi  
+}
+
+function containsElement () {
+  local  e=$1
+  for e in "${@:2}"; do [[ "$e" == "$1" ]] && return 0; done
+  return 1
 }
 
 function slave {
@@ -76,12 +98,16 @@ function slave {
   [[ ! ${ISOLATION:-} ]] || args+=( --isolation="$ISOLATION" )
   for f in "$etc_slave"/* # attributes ip resources isolation &al.
   do
-    if [[ -f $f ]]
+    if [[ -f $f ]] &&  [[ ! $f =~ $EXCLUDE_REGEX ]]
     then
       local name="$(basename "$f")"
       if [[ $name == '?'* ]]         # Recognize flags (options without values)
       then args+=( --"${name#'?'}" )
-      else args+=( --"$name"="$(cat "$f")" )
+      else 
+        if already_declared $name
+        then
+          args+=( --"$name"="$(cat "$f")" )
+        fi
       fi
     fi
   done
@@ -93,7 +119,10 @@ function slave {
   if [[ ${#attributes[@]} -gt 0 ]]
   then
     local formatted="$(printf ';%s' "${attributes[@]}")"
-    args+=( --attributes="${formatted:1}" )        # NB: Leading ';' is clipped
+    if already_declared $formatted
+    then
+      args+=( --attributes="${formatted:1}" )        # NB: Leading ';' is clipped
+    fi 
   fi
   for f in "$etc_slave"/resources/*
   do [[ ! -s $f ]] || resources+=( "$(basename "$f")":"$(cat "$f")" )
@@ -101,7 +130,10 @@ function slave {
   if [[ ${#resources[@]} -gt 0 ]]
   then
     local formatted="$(printf ';%s' "${resources[@]}")"
-    args+=( --resources="${formatted:1}" )         # NB: Leading ';' is clipped
+    if already_declared $formatted 
+    then 
+      args+=( --resources="${formatted:1}" )         # NB: Leading ';' is clipped
+    fi
   fi
 
   if [[ "${args[@]:-}" == *'--no-logger'* ]]
@@ -135,7 +167,7 @@ function master {
   [[ ! ${LOGS:-} ]]    || args+=( --log_dir="$LOGS" )
   for f in "$etc_master"/* # cluster log_dir port &al.
   do
-    if [[ -f $f ]]
+    if [[ -f $f ]] &&  [[ ! $f =~ $EXCLUDE_REGEX ]]
     then
       local name="$(basename "$f")"
       if [[ $name == '?'* ]]         # Recognize flags (options without values)
