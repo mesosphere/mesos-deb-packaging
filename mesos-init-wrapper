@@ -161,9 +161,18 @@ function master {
 
 # Send all output to syslog and tag with PID and executable basename.
 function logged {
+  local pattern="[0-9]\{4\} [0-9]\{2\}:[0-9]\{2\}:[0-9]\{2\}.[0-9]* "
   local tag="${1##*/}[$$]"
-  exec 1> >(exec logger -p user.info -t "$tag")
-  exec 2> >(exec logger -p user.err  -t "$tag")
+  exec 1> >(
+    tee \
+      >(sed -n "/^I$pattern/ s/// p" | logger -p user.info -t "$tag" ) \
+      >(sed -n "/^W$pattern/ s/// p" | logger -p user.warn -t "$tag" ) \
+      >(sed -n "/^E$pattern/ s/// p" | logger -p user.err  -t "$tag" ) \
+      >(sed -n "/^F$pattern/ s/// p" | logger -p user.crit -t "$tag" ) \
+      >(grep -v "^[IWEF]$pattern"    | logger -p user.crit -t "$tag" ) \
+      > /dev/null
+  )
+  exec 2>&1
   exec "$@"
 }
 
