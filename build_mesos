@@ -224,7 +224,7 @@ function os_release {
 function display_version {
   local os="$( tr A-Z a-z <<<"$1" )" version="$( tr A-Z a-z <<<"$2" )"
   case "$os" in
-    redhat|centos|debian|fedora) out "$os/${version%%.*}" ;;   # Ignore minor versions
+    redhat|rhel|centos|debian|fedora) out "$os/${version%%.*}" ;;   # Ignore minor versions
     macosx)               out "$os/${version%.*}" ;;  # Ignore bug fix releases
     *)                    out "$os/$version" ;;
   esac
@@ -268,7 +268,7 @@ function init_scripts {
   mkdir -p usr/bin
   cp -p "$this"/mesos-init-wrapper usr/bin
   case "$1" in
-    fedora/*|redhat/7|redhat/7.*|centos/7|centos/7.*)
+    fedora/*|redhat/7|redhat/7.*|rhel/7|rhel/7.*|centos/7|centos/7.*)
       mkdir -p usr/lib/systemd/system
       cp "$this"/systemd/master.systemd usr/lib/systemd/system/mesos-master.service
       cp "$this"/systemd/slave.systemd usr/lib/systemd/system/mesos-slave.service ;;
@@ -311,7 +311,7 @@ function jars {
 function pkg {
   case "$linux" in
     ubuntu/*|debian/*) deb_ ;;
-    centos/*|redhat/*|fedora/*) rpm_ ;;
+    centos/*|redhat/*|rhel/*|fedora/*) rpm_ ;;
     *)                 err "Not sure how to package for: $linux" ;;
   esac
 }
@@ -319,7 +319,7 @@ function pkg {
 function architecture {
   case "$linux" in
     ubuntu/*|debian/*) dpkg-architecture -qDEB_BUILD_ARCH ;;
-    centos/*|redhat/*|fedora/*) arch ;;
+    centos/*|redhat/*|rhel/*|fedora/*) arch ;;
     *)                 err "Not sure how to determine arch for: $linux" ;;
   esac
 }
@@ -349,6 +349,9 @@ function rpm_ {
   case "$linux" in
     centos/6) libevent_devel_pkg=libevent2-devel ;;
     centos/7) libevent_devel_pkg=libevent-devel ;;
+    redhat/6) libevent_devel_pkg=libevent2-devel ;;
+    redhat/7) libevent_devel_pkg=libevent-devel ;;
+    rhel/7) libevent_devel_pkg=libevent-devel ;;
     *)        err "Unknown CentOS distribution: $linux" ;;
   esac
 
