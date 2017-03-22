@@ -351,6 +351,7 @@ function deb_ {
                -d libevent-dev
                -d libsvn1
                -d libsasl2-modules
+               -d libcurl3-nss
                --after-install "$this/$asset_dir/mesos.postinst"
                --after-remove "$this/$asset_dir/mesos.postrm" )
   pkgname="pkg"
