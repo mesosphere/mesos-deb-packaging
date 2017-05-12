@@ -113,7 +113,7 @@ function go {
   create_installation
   create_lib_symlinks
   pkg
-  if [[ ! $(configure_opts) =~ "--disable-python\>" ]]
+  if [[ ! $(configure_opts) =~ "--disable-python" ]]
   then
     save_python_egg
   fi	  
@@ -254,7 +254,7 @@ function create_installation {(
   fi
   extra_libs
   init_scripts "$linux"
-  if [[ ! $(configure_opts) =~ "--disable-java\>" ]]
+  if [[ ! $(configure_opts) =~ "--disable-java" ]]
   then
     jars
   fi
