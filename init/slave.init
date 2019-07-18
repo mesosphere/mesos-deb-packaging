@@ -38,6 +38,7 @@ case "$1" in
   stop)
     echo -n "Stopping $DESC: "
     stop
+    rm -f "$PID"
     echo "$NAME."
     ;;
   restart)
