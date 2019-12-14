@@ -58,6 +58,12 @@ function main {
   err "Please use \`master' or \`slave'."
 }
 
+# Search supplied directory for files that do not end with .dkpg-dist or .rpmnew
+function find_files {
+    find "$1" -maxdepth 1 -name '*.dpkg-dist' -o -name '*.rpmnew' -prune \
+         -o \( -type f -print \)
+}
+
 function slave {
   local etc_slave=/etc/mesos-slave
   local args=()
@@ -74,7 +80,7 @@ function slave {
   [[ ! ${IP:-} ]]        || args+=( --ip="$IP" )
   [[ ! ${LOGS:-} ]]      || args+=( --log_dir="$LOGS" )
   [[ ! ${ISOLATION:-} ]] || args+=( --isolation="$ISOLATION" )
-  for f in "$etc_slave"/* # attributes ip resources isolation &al.
+  for f in $(find_files "$etc_slave") # attributes ip resources isolation &al.
   do
     if [[ -f $f ]]
     then
@@ -87,7 +93,7 @@ function slave {
   done
   # We allow the great multitude of attributes and resources to be specified
   # in directories, where the filename is the key and the contents its value.
-  for f in "$etc_slave"/attributes/*
+  for f in $(find_files "$etc_slave"/attributes/)
   do [[ ! -s $f ]] || attributes+=( "$(basename "$f")":"$(cat "$f")" )
   done
   if [[ ${#attributes[@]} -gt 0 ]]
@@ -95,7 +101,7 @@ function slave {
     local formatted="$(printf ';%s' "${attributes[@]}")"
     args+=( --attributes="${formatted:1}" )        # NB: Leading ';' is clipped
   fi
-  for f in "$etc_slave"/resources/*
+  for f in $(find_files "$etc_slave"/resources/)
   do [[ ! -s $f ]] || resources+=( "$(basename "$f")":"$(cat "$f")" )
   done
   if [[ ${#resources[@]} -gt 0 ]]
@@ -133,7 +139,7 @@ function master {
   [[ ! ${PORT:-} ]]    || args+=( --port="$PORT" )
   [[ ! ${CLUSTER:-} ]] || args+=( --cluster="$CLUSTER" )
   [[ ! ${LOGS:-} ]]    || args+=( --log_dir="$LOGS" )
-  for f in "$etc_master"/* # cluster log_dir port &al.
+  for f in $(find_files "$etc_master") # cluster log_dir port &al.
   do
     if [[ -f $f ]]
     then
