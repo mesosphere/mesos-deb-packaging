@@ -108,6 +108,7 @@ function main {
 
 function go {
   if ! $prebuilt; then
+    patch_mesos
     build
   fi
   create_installation
@@ -143,6 +144,19 @@ function maybe_append_git_hash {
   else out "$1"
   fi
 }
+
+function patch_mesos {(
+  if [[ ! -f "mesos.patched" ]]; then
+    local patches=("$this/patch/$version"/*.patch)
+    for patch in $patches; do
+      if [[ -f "$patch" ]]; then
+        out "Applying mesos patch $patch ..."
+        patch -N -t -s -p1 < "$patch"
+      fi
+    done
+    touch "mesos.patched"
+  fi
+)}
 
 function checkout {
   local url=( $(url_split "$repo") )
@@ -285,7 +299,7 @@ function init_scripts {
       mkdir -p usr/lib/systemd/system
       cp "$this"/systemd/master.systemd usr/lib/systemd/system/mesos-master.service
       cp "$this"/systemd/slave.systemd usr/lib/systemd/system/mesos-slave.service ;;
-    debian/8*|debian/9*|ubuntu/15*|ubuntu/16*|ubuntu/17*|ubuntu/18*)
+    debian/8*|debian/9*|debian/10*|ubuntu/15*|ubuntu/16*|ubuntu/17*|ubuntu/18*)
       mkdir -p lib/systemd/system
       cp "$this"/systemd/master.systemd lib/systemd/system/mesos-master.service
       cp "$this"/systemd/slave.systemd lib/systemd/system/mesos-slave.service ;;
@@ -344,8 +358,8 @@ function find_gem_bin {
 function deb_ {
   local libcurl_package
   case "$linux" in
-    ubuntu/18*) libcurl_package="libcurl4" ;;
-    *)          libcurl_package="libcurl3" ;;
+    ubuntu/18*|debian/10*) libcurl_package="libcurl4" ;;
+    *)                     libcurl_package="libcurl3" ;;
   esac
 
   local opts=( -t deb
@@ -498,6 +512,10 @@ function configure_opts {
   if [[ $(vercomp "$version" 0.21.0) == '>' ]] ||
      [[ $(vercomp "$version" 0.21.0) == '=' ]]
   then options+=" --enable-optimize"
+  fi
+  if [[ "$linux" == debian/10* ]] ||
+     [[ "$linux" == ubuntu/18* ]]
+  then options+=" --with-boost=/usr/include/boost"
   fi
 
   # Pass on any configure flags to Mesos configure script.

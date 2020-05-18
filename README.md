@@ -6,8 +6,19 @@ Apache Mesos is a cluster manager that provides efficient resource isolation and
 
 ## Packaging Requirements
 
+# Debian 9 and Ubuntu 14
 ```bash
-sudo apt-get install ruby ruby-dev python-dev autoconf automake git make libssl-dev libcurl3 libtool
+sudo apt-get install ruby ruby-dev python-dev autoconf automake default-jdk dpkg-dev git make \
+  libssl-dev libcurl3 libtool libapr1 libapr1-dev libcurl3 libcurl4-openssl-dev maven libsasl2-2 \
+  libsasl2-dev libsvn-dev zlib1g-dev libevent-dev
+sudo gem install fpm
+```
+
+# Debian 10 and Ubuntu 18
+```bash
+sudo apt-get install autoconf automake default-jdk dpkg-dev git libapr1 libapr1-dev libboost-all-dev \
+  libcurl4 libcurl4-openssl-dev libsasl2-2 libsasl2-dev libssl-dev libsvn-dev libtool make maven \
+  python-dev ruby ruby-dev zlib1g-dev libevent-dev
 sudo gem install fpm
 ```
 

@@ -1,0 +1,10 @@
+--- mesos.1.10.0/src/java/mesos.pom.in	2020-05-17 16:07:15.000000000 +0000
++++ mesos/src/java/mesos.pom.in		2020-05-17 08:23:09.000000000 +0000
+@@ -86,6 +86,7 @@
+         <configuration>
+           <sourcepath>@abs_top_srcdir@/src/java/src:@abs_top_builddir@/src/java/generated</sourcepath>
+           <subpackages>org.apache.mesos</subpackages>
++          <detectJavaApiLink>false</detectJavaApiLink>
+         </configuration>
+         <executions>
+           <execution>
