@@ -285,7 +285,7 @@ function init_scripts {
       mkdir -p usr/lib/systemd/system
       cp "$this"/systemd/master.systemd usr/lib/systemd/system/mesos-master.service
       cp "$this"/systemd/slave.systemd usr/lib/systemd/system/mesos-slave.service ;;
-    debian/8*|debian/9*|ubuntu/15*|ubuntu/16*|ubuntu/17*|ubuntu/18*)
+    debian/8*|debian/9*|ubuntu/15*|ubuntu/16*|ubuntu/17*|ubuntu/18*|ubuntu/20*)
       mkdir -p lib/systemd/system
       cp "$this"/systemd/master.systemd lib/systemd/system/mesos-master.service
       cp "$this"/systemd/slave.systemd lib/systemd/system/mesos-slave.service ;;
@@ -344,6 +344,7 @@ function find_gem_bin {
 function deb_ {
   local libcurl_package
   case "$linux" in
+    ubuntu/20*) libcurl_package="libcurl4" ;;
     ubuntu/18*) libcurl_package="libcurl4" ;;
     *)          libcurl_package="libcurl3" ;;
   esac
