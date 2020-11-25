@@ -281,7 +281,7 @@ function init_scripts {
   mkdir -p usr/bin
   cp -p "$this"/mesos-init-wrapper usr/bin
   case "$1" in
-    fedora/*|redhat/7|redhat/7.*|centos/7|centos/7.*|rhel/7|rhel/7.*|opensuse/*)
+    fedora/*|redhat/7|redhat/7.*|centos/7|centos/7.*|rhel/7|rhel/7.*|redhat/8|redhat/8.*|centos/8|centos/8.*|rhel/8|rhel/8.*|opensuse/*)
       mkdir -p usr/lib/systemd/system
       cp "$this"/systemd/master.systemd usr/lib/systemd/system/mesos-master.service
       cp "$this"/systemd/slave.systemd usr/lib/systemd/system/mesos-slave.service ;;
@@ -375,6 +375,7 @@ function rpm_ {
   case "$linux" in
     centos/6|rhel/6) os_tag=el6; libevent_devel_pkg=libevent2-devel ;;
     centos/7|rhel/7) os_tag=el7; libevent_devel_pkg=libevent-devel ;;
+    centos/8|rhel/8) os_tag=el8; libevent_devel_pkg=libevent-devel ;;
     opensuse/*)      os_tag=${linux//[\/.]/}; libevent_devel_pkg=libevent-devel ;;
     *)        err "Unknown CentOS distribution: $linux" ;;
   esac
@@ -408,6 +409,7 @@ function fpm_ {
   case "$linux" in
     centos/6|rhel/6) os_tag=el6 ;;
     centos/7|rhel/7) os_tag=el7 ;;
+    centos/8|rhel/8) os_tag=el8 ;;
     *)               os_tag=${linux//[\/.]/} ;;
   esac
 
